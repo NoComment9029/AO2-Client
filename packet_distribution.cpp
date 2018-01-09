@@ -8,7 +8,6 @@
 #include "debug_functions.h"
 
 #include <QDebug>
-#include <QCryptographicHash>
 
 void AOApplication::ms_packet_received(AOPacket *p_packet)
 {
@@ -227,24 +226,15 @@ void AOApplication::server_packet_received(AOPacket *p_packet)
     QString window_title = "Attorney Online 2";
     int selected_server = w_lobby->get_selected_server();
 
-    QString server_address = "", server_name = "";
     if (w_lobby->public_servers_selected)
     {
-      if (selected_server >= 0 && selected_server < server_list.size()) {
-        auto info = server_list.at(selected_server);
-        server_name = info.name;
-        server_address = info.ip + info.port;
-        window_title += ": " + server_name;
-      }
+      if (selected_server >= 0 && selected_server < server_list.size())
+        window_title += ": " + server_list.at(selected_server).name;
     }
     else
     {
-      if (selected_server >= 0 && selected_server < favorite_list.size()) {
-        auto info = favorite_list.at(selected_server);
-        server_name = info.name;
-        server_address = info.ip + info.port;
-        window_title += ": " + server_name;
-      }
+      if (selected_server >= 0 && selected_server < favorite_list.size())
+        window_title += ": " + favorite_list.at(selected_server).name;
     }
 
     w_courtroom->set_window_title(window_title);
@@ -261,10 +251,6 @@ void AOApplication::server_packet_received(AOPacket *p_packet)
       f_packet = new AOPacket("askchar2#%");
 
     send_server_packet(f_packet);
-
-    QCryptographicHash hash(QCryptographicHash::Algorithm::Sha256);
-    hash.addData(server_address.toUtf8());
-    discord->state_server(server_name.toStdString(), hash.result().toBase64().toStdString());
   }
   else if (header == "CI")
   {
@@ -477,6 +463,34 @@ void AOApplication::server_packet_received(AOPacket *p_packet)
   {
     if (courtroom_constructed && courtroom_loaded)
       w_courtroom->handle_chatmessage(&p_packet->get_contents());
+  }
+  else if (header == "confirm") {
+      if (!w_courtroom) {
+          goto end;
+      }
+
+      auto s = p_packet->get_contents();
+      if (s.length() < 1) {
+          qDebug() << "Not enough arguments for confirm.";
+          goto end;
+      }
+
+      bool o;
+      auto t = s[0].toInt(&o);
+
+      if (!o) {
+          goto end;
+      }
+
+      switch (t) {
+          case 0:
+          w_courtroom->cc();
+          break;
+
+          case 1:
+          w_courtroom->cd();
+          break;
+      }
   }
   else if (header == "MC")
   {

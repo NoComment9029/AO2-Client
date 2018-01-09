@@ -10,10 +10,10 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 RC_ICONS = logo.ico
 
-TARGET = Attorney_Online_remake
+TARGET = tnclient
 TEMPLATE = app
 
-VERSION = 2.4.8.0
+VERSION = 2.4.3.0
 
 SOURCES += main.cpp\
         lobby.cpp \
@@ -47,8 +47,7 @@ SOURCES += main.cpp\
     aotextarea.cpp \
     aolineedit.cpp \
     aotextedit.cpp \
-    aoevidencedisplay.cpp \
-    discord_rich_presence.cpp
+    aoevidencedisplay.cpp
 
 HEADERS  += lobby.h \
     aoimage.h \
@@ -77,21 +76,11 @@ HEADERS  += lobby.h \
     aotextarea.h \
     aolineedit.h \
     aotextedit.h \
-    aoevidencedisplay.h \
-    discord_rich_presence.h \
-    discord-rpc.h
+    aoevidencedisplay.h
 
-# 1. You need to get BASS and put the x86 bass DLL/headers in the project root folder
-#    AND the compilation output folder. If you want a static link, you'll probably
-#    need the .lib file too. MinGW-GCC is really finicky finding BASS, it seems.
-# 2. You need to compile the Discord Rich Presence SDK separately and add the lib/headers
-#    in the same way as BASS. Discord RPC uses CMake, which does not play nicely with
-#    QMake, so this step must be manual.
-unix:LIBS += -L$$PWD -lbass -ldiscord-rpc
-win32:LIBS += -L$$PWD "$$PWD/bass.dll" -ldiscord-rpc #"$$PWD/discord-rpc.dll"
+unix:LIBS += -L$$PWD -lbass
+win32:LIBS += "$$PWD/bass.dll"
 android:LIBS += -L$$PWD\android\libs\armeabi-v7a\ -lbass
-
-CONFIG += c++11
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 

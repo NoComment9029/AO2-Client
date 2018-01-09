@@ -3,7 +3,6 @@
 
 #include "aopacket.h"
 #include "datatypes.h"
-#include "discord_rich_presence.h"
 
 #include <QApplication>
 #include <QVector>
@@ -24,7 +23,6 @@ public:
   NetworkManager *net_manager;
   Lobby *w_lobby;
   Courtroom *w_courtroom;
-  AttorneyOnline::Discord *discord;
 
   bool lobby_constructed = false;
   bool courtroom_constructed = false;
@@ -141,7 +139,7 @@ public:
 private:
   const int RELEASE = 2;
   const int MAJOR_VERSION = 4;
-  const int MINOR_VERSION = 8;
+  const int MINOR_VERSION = 3;
 
   QString user_theme = "default";
 
@@ -149,7 +147,7 @@ private:
   QVector<server_type> favorite_list;
 
 private slots:
-  void ms_connect_finished(bool connected, bool will_retry);
+  void ms_connect_finished(bool connected);
 
 public slots:
   void server_disconnected();
