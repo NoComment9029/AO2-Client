@@ -265,6 +265,8 @@ void Lobby::on_about_clicked()
               "Supporting development:\n"
               "stonedDiscord\n"
               "Fiercy\n\n"
+              "Moral support:\"n"
+              "Liquid\n\n"
               "UI design:\n"
               "Ruekasu\n"
               "Draxirch\n\n"
